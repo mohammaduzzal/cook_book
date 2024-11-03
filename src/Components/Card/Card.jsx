@@ -1,8 +1,12 @@
 
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { FaRegTrashCan } from "react-icons/fa6";
 
-const Card = ({coffee}) => {
+const Card = ({coffee,handleRemove}) => {
+  const {pathname} = useLocation()
+
+
     const {id,name,image,category,origin,type,rating,popularity,} = coffee || {}
     return (
         <div className="flex flex-col relative">
@@ -24,6 +28,11 @@ const Card = ({coffee}) => {
       
         </div>
         </Link>
+        {
+          pathname === '/Dashboard' && (
+            <div onClick={()=> handleRemove(id)} className='absolute p-3 rounded-full cursor-pointer bg-warning -top-5 -right-5'><FaRegTrashCan size={20}/></div>
+          )
+        }
       </div>
     );
 };

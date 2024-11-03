@@ -1,20 +1,36 @@
 
-import PropTypes, { object } from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useLoaderData, useParams } from 'react-router-dom';
 import nutritionImage from '../../assets/nutrition.png'
+import { addFavorite, getAllFavorites } from '../../Utility/Index';
 
 const CoffesDetails = () => {
     const data = useLoaderData()
     const {id} = useParams()
     const [coffee, setCoffee] = useState({})
+    const [isDisable, setDisable] = useState(false)
 
     useEffect(()=>{
         const singleDate = data.find(coffee => coffee.id == id)
         setCoffee(singleDate)
+
+        const dear = getAllFavorites()
+        const isExist = dear.find(item => item.id == singleDate.id)
+        if(isExist){
+            setDisable(true)
+        }
+
+
     },[data, id])
 
     const {name,image,rating,popularity,description,nutrition_info,ingredients,making_process} = coffee
+
+
+    const handleFavorite = coffee =>{
+        addFavorite(coffee)
+        setDisable(true)
+        
+    }
 
     return (
         <div className='my-12'>
@@ -30,7 +46,7 @@ const CoffesDetails = () => {
                     <p className='text-base'>Rating : {rating}</p>
                 </div>
                 <div>
-                    <button className='btn btn-warning'>Add to Favorite</button>
+                    <button disabled={isDisable} onClick={()=>handleFavorite(coffee)} className='btn btn-warning'>Add to Favorite</button>
                 </div>
             </div>
             {/* making process */}
@@ -46,8 +62,8 @@ const CoffesDetails = () => {
                         <ul className='text-xl ml-12'>
                             {
                             ingredients && 
-                            ingredients.map(i =>(
-                                <li className='list-disc' key={i}>{i}</li>
+                            ingredients.map((i,idx) =>(
+                                <li className='list-disc' key={idx}>{i}</li>
                             ))
                             }
                         </ul>
@@ -55,8 +71,8 @@ const CoffesDetails = () => {
                         <ul className='text-xl ml-12'>
                             {
                             nutrition_info && 
-                            Object.keys( nutrition_info).map(n =>(
-                                <li className='list-disc' key={nutrition_info[n]}>{n} : {nutrition_info[n]}</li>
+                            Object.keys( nutrition_info).map((n,idx) =>(
+                                <li className='list-disc' key={idx} >{n} : {nutrition_info[n]}</li>
                             ))
                             }
                         </ul>
@@ -73,8 +89,5 @@ const CoffesDetails = () => {
     );
 };
 
-CoffesDetails.propTypes = {
-    coffee:PropTypes.object
-};
 
 export default CoffesDetails;
