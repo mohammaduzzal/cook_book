@@ -1,11 +1,15 @@
+import { useLoaderData } from "react-router-dom";
+import Card from "../../Components/Card/Card";
 
 
 const Coffes = () => {
+    const data = useLoaderData()
     return (
-        <div>
-            <h2>Coffes
-            </h2>
-        </div>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
+        {
+          data.map(coffee => <Card key={coffee.id} coffee={coffee}></Card>)
+        }
+  </div>
     );
 };
 
